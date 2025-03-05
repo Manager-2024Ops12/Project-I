@@ -1,0 +1,247 @@
+
+R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> getwd()
+[1] "C:/Users/Rising Star/Downloads/exdata_data_household_power_consumption"
+> # Estimate memory usage (assuming 8 bytes per numeric value)
+> rows <- 2075259
+> cols <- 9
+> memory_required <- (rows * cols * 8) / (1024^2)  # Convert bytes to MB
+> print(memory_required)  # Approximate memory in MB
+[1] 142.4967
+> # Read only the rows for 1st and 2nd February 2007
+> data <- read.table("household_power_consumption.txt", sep=";", header=TRUE, 
++                    na.strings="?", stringsAsFactors=FALSE)
+> 
+> # Convert Date column to Date format
+> data$Date <- as.Date(data$Date, format="%d/%m/%Y")
+> 
+> # Subset the data for the required dates
+> subset_data <- subset(data, Date >= "2007-02-01" & Date <= "2007-02-02")
+> # Read only the rows for 1st and 2nd February 2007
+> data <- read.table("household_power_consumption.txt", sep=";", header=TRUE, 
++                    na.strings="?", stringsAsFactors=FALSE)
+> 
+> # Convert Date column to Date format
+> data$Date <- as.Date(data$Date, format="%d/%m/%Y")
+> 
+> # Subset the data for the required dates
+> subset_data <- subset(data, Date >= "2007-02-01" & Date <= "2007-02-02")
+> subset_data$Datetime <- strptime(paste(subset_data$Date, subset_data$Time), format="%Y-%m-%d %H:%M:%S")
+> png("plot1.png", width=480, height=480)
+> hist(subset_data$Global_active_power, col="red", main="Global Active Power", 
++      xlab="Global Active Power (kilowatts)", ylab="Frequency")
+> dev.off()
+null device 
+          1 
+> png("plot2.png", width=480, height=480)
+> plot(subset_data$Datetime, subset_data$Global_active_power, type="l", 
++      xlab="", ylab="Global Active Power (kilowatts)")
+> dev.off()
+null device 
+          1 
+> png("plot3.png", width=480, height=480)
+> plot(subset_data$Datetime, subset_data$Sub_metering_1, type="l", col="black", 
++      ylab="Energy sub metering", xlab="")
+> lines(subset_data$Datetime, subset_data$Sub_metering_2, col="red")
+> lines(subset_data$Datetime, subset_data$Sub_metering_3, col="blue")
+> legend("topright", legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
++        col=c("black", "red", "blue"), lty=1)
+> dev.off()
+null device 
+          1 
+> png("plot4.png", width=480, height=480)
+> par(mfrow=c(2,2))  # Create a 2x2 grid
+> 
+> # Plot 1: Global Active Power
+> plot(subset_data$Datetime, subset_data$Global_active_power, type="l", 
++      xlab="", ylab="Global Active Power")
+> 
+> # Plot 2: Voltage
+> plot(subset_data$Datetime, subset_data$Voltage, type="l", 
++      xlab="datetime", ylab="Voltage")
+> 
+> # Plot 3: Energy Sub-Metering
+> plot(subset_data$Datetime, subset_data$Sub_metering_1, type="l", col="black", 
++      ylab="Energy sub metering", xlab="")
+> lines(subset_data$Datetime, subset_data$Sub_metering_2, col="red")
+> lines(subset_data$Datetime, subset_data$Sub_metering_3, col="blue")
+> legend("topright", legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), 
++        col=c("black", "red", "blue"), lty=1, bty="n")
+> 
+> # Plot 4: Global Reactive Power
+> plot(subset_data$Datetime, subset_data$Global_reactive_power, type="l", 
++      xlab="datetime", ylab="Global Reactive Power")
+> 
+> dev.off()
+null device 
+          1 
+> png("plot1.png", width=480, height=480)  # Open PNG device
+> hist(data$Global_active_power, col="red", main="Global Active Power", 
++      xlab="Global Active Power (kilowatts)", ylab="Frequency")  # Create plot
+> dev.off()  # Close PNG device
+null device 
+          1 
+> sum(is.na(data$Global_active_power))  # Check if there are missing values
+[1] 25979
+> clean_data <- na.omit(data)  # Remove missing values
+> png("plot1.png", width=480, height=480)
+> hist(clean_data$Global_active_power, col="red", main="Global Active Power", 
++      xlab="Global Active Power (kilowatts)", ylab="Frequency")
+> dev.off()
+null device 
+          1 
+> png("C:/Users/Rising Star/Downloads/plot1.png", width=480, height=480)
+> hist(data$Global_active_power, col="red", main="Global Active Power", 
++      xlab="Global Active Power (kilowatts)", ylab="Frequency")
+> dev.off()
+null device 
+          1 
+> file.exists("C:/Users/Rising Star/Downloads/plot1.png")
+[1] TRUE
+> str(data)  # Check structure of the dataset
+'data.frame':   2075259 obs. of  9 variables:
+ $ Date                 : Date, format: "2006-12-16" "2006-12-16" ...
+ $ Time                 : chr  "17:24:00" "17:25:00" "17:26:00" "17:27:00" ...
+ $ Global_active_power  : num  4.22 5.36 5.37 5.39 3.67 ...
+ $ Global_reactive_power: num  0.418 0.436 0.498 0.502 0.528 0.522 0.52 0.52 0.51 0.51 ...
+ $ Voltage              : num  235 234 233 234 236 ...
+ $ Global_intensity     : num  18.4 23 23 23 15.8 15 15.8 15.8 15.8 15.8 ...
+ $ Sub_metering_1       : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ Sub_metering_2       : num  1 1 2 1 1 2 1 1 1 2 ...
+ $ Sub_metering_3       : num  17 16 17 17 17 17 17 17 17 16 ...
+> summary(data$Global_active_power)  # Check if the column has data
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  0.076   0.308   0.602   1.092   1.528  11.122   25979 
+> clean_data <- na.omit(data)  
+> png("C:/Users/Rising Star/Downloads/plot1.png", width=480, height=480)
+> hist(clean_data$Global_active_power, col="red", main="Global Active Power", 
++      xlab="Global Active Power (kilowatts)", ylab="Frequency")
+> dev.off()
+null device 
+          1 
+> file.exists("C:/Users/Rising Star/Downloads/plot1.png")
+[1] TRUE
+> png("C:/Users/Rising Star/Desktop/plot1.png", width=480, height=480)
+> hist(clean_data$Global_active_power, col="red", main="Global Active Power", 
++      xlab="Global Active Power (kilowatts)", ylab="Frequency")
+> dev.off()
+null device 
+          1 
+> summary(clean_data$Global_active_power)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.076   0.308   0.602   1.092   1.528  11.122 
+> str(clean_data)
+'data.frame':   2049280 obs. of  9 variables:
+ $ Date                 : Date, format: "2006-12-16" "2006-12-16" ...
+ $ Time                 : chr  "17:24:00" "17:25:00" "17:26:00" "17:27:00" ...
+ $ Global_active_power  : num  4.22 5.36 5.37 5.39 3.67 ...
+ $ Global_reactive_power: num  0.418 0.436 0.498 0.502 0.528 0.522 0.52 0.52 0.51 0.51 ...
+ $ Voltage              : num  235 234 233 234 236 ...
+ $ Global_intensity     : num  18.4 23 23 23 15.8 15 15.8 15.8 15.8 15.8 ...
+ $ Sub_metering_1       : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ Sub_metering_2       : num  1 1 2 1 1 2 1 1 1 2 ...
+ $ Sub_metering_3       : num  17 16 17 17 17 17 17 17 17 16 ...
+ - attr(*, "na.action")= 'omit' Named int [1:25979] 6840 6841 19725 19726 41833 61910 98255 98256 142589 190498 ...
+  ..- attr(*, "names")= chr [1:25979] "6840" "6841" "19725" "19726" ...
+> # Convert Date column to Date format if not already
+> clean_data$Date <- as.Date(clean_data$Date, format="%Y-%m-%d")
+> 
+> # Filter only February 1 and 2, 2007
+> filtered_data <- subset(clean_data, Date >= "2007-02-01" & Date <= "2007-02-02")
+> 
+> # Check if data is filtered correctly
+> summary(filtered_data$Date)
+        Min.      1st Qu.       Median         Mean      3rd Qu.         Max. 
+"2007-02-01" "2007-02-01" "2007-02-01" "2007-02-01" "2007-02-02" "2007-02-02" 
+> png("C:/Users/Rising Star/Downloads/plot1.png", width=480, height=480)
+> hist(filtered_data$Global_active_power, col="red", main="Global Active Power", 
++      xlab="Global Active Power (kilowatts)", ylab="Frequency")
+> dev.off()
+null device 
+          1 
+> # Convert Date and Time into a POSIXct datetime object
+> filtered_data$Datetime <- as.POSIXct(paste(filtered_data$Date, filtered_data$Time), format="%Y-%m-%d %H:%M:%S")
+> 
+> # Open PNG device
+> png("C:/Users/Rising Star/Downloads/plot2.png", width=480, height=480)
+> 
+> # Create the line plot
+> plot(filtered_data$Datetime, filtered_data$Global_active_power, type="l", col="black",
++      xlab="", ylab="Global Active Power (kilowatts)", main="Global Active Power Over Time")
+> 
+> # Close PNG device
+> dev.off()
+null device 
+          1 
+> # Open PNG device
+> png("C:/Users/Rising Star/Downloads/plot3.png", width=480, height=480)
+> 
+> # Plot Sub_metering_1 as a line graph
+> plot(filtered_data$Datetime, filtered_data$Sub_metering_1, type="l", col="black",
++      xlab="", ylab="Energy sub metering", main="Energy Sub Metering Over Time")
+> 
+> # Add Sub_metering_2 in red
+> lines(filtered_data$Datetime, filtered_data$Sub_metering_2, col="red")
+> 
+> # Add Sub_metering_3 in blue
+> lines(filtered_data$Datetime, filtered_data$Sub_metering_3, col="blue")
+> 
+> # Add a legend
+> legend("topright", col=c("black", "red", "blue"), lty=1, 
++        legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+> 
+> # Close PNG device
+> dev.off()
+null device 
+          1 
+> # Open PNG device
+> png("C:/Users/Rising Star/Downloads/plot4.png", width=480, height=480)
+> 
+> # Set up a 2x2 layout for multiple plots
+> par(mfrow=c(2,2))
+> 
+> # First plot (Global Active Power)
+> plot(filtered_data$Datetime, filtered_data$Global_active_power, type="l", col="black",
++      xlab="", ylab="Global Active Power")
+> 
+> # Second plot (Voltage over time)
+> plot(filtered_data$Datetime, filtered_data$Voltage, type="l", col="black",
++      xlab="datetime", ylab="Voltage")
+> 
+> # Third plot (Energy Sub Metering)
+> plot(filtered_data$Datetime, filtered_data$Sub_metering_1, type="l", col="black",
++      xlab="", ylab="Energy sub metering")
+> lines(filtered_data$Datetime, filtered_data$Sub_metering_2, col="red")
+> lines(filtered_data$Datetime, filtered_data$Sub_metering_3, col="blue")
+> legend("topright", col=c("black", "red", "blue"), lty=1, 
++        legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"))
+> 
+> # Fourth plot (Global Reactive Power)
+> plot(filtered_data$Datetime, filtered_data$Global_reactive_power, type="l", col="black",
++      xlab="datetime", ylab="Global Reactive Power")
+> 
+> # Close PNG device
+> dev.off()
+null device 
+          1 
+> save.image("C:\\Users\\Rising Star\\Downloads\\exdata_data_household_power_consumption\\Project 1")
+> 
